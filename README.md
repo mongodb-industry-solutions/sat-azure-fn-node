@@ -18,12 +18,12 @@ FILE: `local.settings.json`
 
 Get all remote configurations
 ```sh
-func azure functionapp fetch-app-settings sat-fn-demo
-func azure storage fetch-connection-string sat-store
+func azure functionapp fetch-app-settings sat-fn-connector
+func azure storage fetch-connection-string mdbsat
 ```
 
 Publish the function app
 ```sh
-func azure functionapp publish sat-fn-demo
+func azure functionapp publish sat-fn-connector --javascript
 ```
 

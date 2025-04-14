@@ -1,7 +1,7 @@
 {
-  "name": "",
+  "name": "sat-azure-fn-node",
   "version": "1.0.0",
-  "description": "",
+  "description": "Azure Function Demo for testing purpose",
   "main": "src/functions/*.js",
   "scripts": {
     "start": "func start",
