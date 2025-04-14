@@ -75,7 +75,7 @@ class DAO {
         catch (err) {
             console.error({
                 msg: "MongoDB connection error",
-                data: { uri: mongoUri },
+                data: { uri, dbName },
                 error: err
             });
         }
