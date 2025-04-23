@@ -5,6 +5,7 @@
   "main": "src/functions/*.js",
   "scripts": {
     "start": "func start",
+    "publish": "func azure functionapp publish sat-fn-connector --javascript",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
