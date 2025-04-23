@@ -14,10 +14,11 @@ class UserService extends DAO {
      * @param {String} [option.uri] - The connection string.
      */
     constructor(options) {
+        
         super({
             collectionName: process.env.MONGO_COLLECTION || "users",
             dbName: process.env.MONGO_DBNAME || "security",
-            uri: options?.uri || process.env.MONGO_URI,
+            uri: options?.uri || process.env.MONGO_URI || process.env.MONGODBATLAS_CLUSTER_CONNECTIONSTRING,
             client: options?.client,
             db: options?.db,
         });
