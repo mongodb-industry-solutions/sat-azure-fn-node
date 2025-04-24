@@ -1,13 +1,13 @@
-const { app } = require('@azure/functions');
-const UserService = require('../services/user.service');
+class UserController {
 
-app.http('GetUsers', {
-    methods: ['GET', 'POST'],
-    authLevel: 'anonymous',
-    handler: async (request, context) => {
+    constructor(service) {
+        this.service = service;
+    }
+
+    async getAll(request, context) {
         try {
             context?.log(`Http function processed request for url "${request?.url}"`);
-            const srvUser = new UserService();
+            const srvUser = this.service;
             const conn = await srvUser.connect();
 
             const name = request?.query.get('name') || await request?.text() || 'world';
@@ -30,4 +30,6 @@ app.http('GetUsers', {
             };
         }
     }
-});
+}
+
+module.exports = UserController;
