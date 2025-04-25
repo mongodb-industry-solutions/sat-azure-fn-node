@@ -14,7 +14,7 @@ class UserService extends DAO {
      * @param {String} [option.uri] - The connection string.
      */
     constructor(options) {
-        
+
         super({
             collectionName: process.env.MONGO_COLLECTION || "users",
             dbName: process.env.MONGO_DBNAME || "security",
@@ -29,6 +29,7 @@ class UserService extends DAO {
      * @returns {Promise<User[]>} A promise that resolves to a list of users.
      */
     async getAll() {
+        await this.check();
         return await this.collection?.find().toArray();
     }
 
@@ -38,9 +39,10 @@ class UserService extends DAO {
      * @returns {Promise<User | null>} A promise that resolves to the user or null.
      */
     async getById(id) {
+        await this.check();
         const objectId = new mongodb.ObjectId(id);
-        const user = await this.collection?.findOne({ _id: objectId });
-        return user ? { _id: user._id.toString(), name: user.name, email: user.email } : null;
+        const { _id, ...data } = await this.collection?.findOne({ _id: objectId });
+        return data ? { _id: _id.toString(), ...data } : null;
     }
 
     /**
@@ -49,6 +51,7 @@ class UserService extends DAO {
      * @returns {Promise<User>} The created user with assigned ID.
      */
     async create(user) {
+        await this.check();
         const result = await this.collection?.insertOne(user);
         return { _id: result.insertedId.toString(), ...user };
     }
@@ -60,12 +63,13 @@ class UserService extends DAO {
      * @returns {Promise<User | null>} The updated user.
      */
     async update(id, updates) {
+        await this.check();
         const objectId = new mongodb.ObjectId(id);
         const result = await this.collection?.findOneAndUpdate({ _id: objectId }, { $set: updates }, { returnDocument: 'after' });
-        if (!result.value)
-            return null;
-        const { _id, name, email } = result.value;
-        return { _id: _id.toString(), name, email };
+        this.logger?.log(JSON.stringify({ src: "service:update", result }));
+        if (!result) return null;
+        const { _id, ...data } = result.value || result;
+        return { _id: _id.toString(), ...data };
     }
 
     /**
@@ -74,6 +78,7 @@ class UserService extends DAO {
      * @returns {Promise<User | null>} The deleted user.
      */
     async delete(id) {
+        await this.check();
         const objectId = new mongodb.ObjectId(id);
         const filter = { _id: objectId };
         const res = await this.collection?.deleteOne(filter);
