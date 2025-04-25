@@ -64,9 +64,9 @@ class DAO {
      * @returns {mongodb.Db}
      */
     async connect(uri = null, dbName = null) {
+        uri = uri || this.uri;
+        dbName = dbName || this.dbName;
         try {
-            uri = uri || this.uri;
-            dbName = dbName || this.dbName;
             this.uri = uri || this.uri;
             const client = this.getClient(uri);
             this.db = client.db(dbName);
@@ -87,6 +87,31 @@ class DAO {
      */
     close() {
         return this.client?.close();
+    }
+
+    /**
+     * Check connection to the database 
+     * @param {String} [uri] 
+     * @param {String} [dbName] 
+     * @returns {boolean} 
+     */
+    async check(uri = null, dbName = null) {
+        uri = uri || this.uri;
+        dbName = dbName || this.dbName;
+        try {
+            if (!this.db) {
+                await this.connect(uri, dbName);
+            }
+            return !!this.db;
+        }
+        catch (err) {
+            console.error({
+                msg: "MongoDB connection error",
+                data: { uri, dbName },
+                error: err
+            });
+            return false;
+        }
     }
 }
 
