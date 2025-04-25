@@ -85,7 +85,7 @@ func azure functionapp publish sat-fn-connector
 Execute the deployed function and test it using HTTP requests:
 
 ```sh
-GET https://sat-fn-connector.azurewebsites.net/api/GetUsers
+GET  https://sat-fn-connector.azurewebsites.net/api/users
 ```
 
 ### Related Concepts
