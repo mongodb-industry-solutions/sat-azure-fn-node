@@ -80,6 +80,8 @@ func azure functionapp publish sat-fn-connector
 #         Invoke url: https://sat-fn-connector.azurewebsites.net/api/users/{id}
 ```
 
+![](./rsc/function.dashboard.jpg)
+
 #### Run the Function App Service
 
 Execute the deployed function and test it using HTTP requests:
@@ -101,6 +103,15 @@ The project leverages the MongoDB ecosystem including App Services and real-time
 #### Data Science and Analytics
 
 By utilizing tools such as Azure AI Studio and Fabric Power BI, advanced data processing and analytics are achieved, allowing for the generation of insights from medical imaging data, as demonstrated in the sample use case.
+
+### Azure Connectors 
+Azure Service Connector is a tool designed to facilitate the seamless connection between Azure compute services and other backing services, such as databases, storage solutions, and messaging services. Specifically, when using a Service Connector for MongoDB, you can easily integrate Azure services with MongoDB databases. This capability simplifies network configurations and manages connection settings, such as generating environment variables, facilitating efficient service-to-service communication.
+
+![](./rsc/function.connector.1.jpg)
+![](./rsc/function.connector.2.jpg)
+![](./rsc/function.connector.3.jpg)
+![](./rsc/function.connector.4.jpg)
+![](./rsc/function.connector.5.jpg)
 
 ### Additional Resources
 
