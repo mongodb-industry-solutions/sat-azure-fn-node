@@ -4,6 +4,19 @@ class UserController {
         this.service = service;
     }
 
+    async readStreamToString(stream) {
+        const chunks = [];
+        for await (const chunk of stream) {
+            chunks.push(chunk);
+        }
+        return Buffer.concat(chunks).toString('utf8');
+    }
+
+    async getBody(body) {
+        const rawBody = await this.readStreamToString(body);
+        return JSON.parse(rawBody);
+    }
+
     /**
      * Retrieves the service metadata
      * @param {Request} request - The HTTP request.
@@ -38,7 +51,8 @@ class UserController {
      */
     async create(request, context) {
         try {
-            const user = await this.service.create(request.body);
+            const body = await this.getBody(request.body);
+            const user = await this.service.create(body);
             return {
                 status: 201,
                 headers: {
@@ -130,7 +144,13 @@ class UserController {
      */
     async update(request, context) {
         try {
-            const user = await this.service.update(request.params.id, request.body);
+            const oId = request.params.id;
+            const headers = request.headers;
+            const body = await this.getBody(request.body);
+            this.service.logger = context;
+
+            const user = await this.service.update(oId, body);
+            context?.log(JSON.stringify({ action: "update", data: { user, oId, body, headers }, request, context }));
 
             if (!user) {
                 return {

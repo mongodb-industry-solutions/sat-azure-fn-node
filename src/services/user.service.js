@@ -41,8 +41,8 @@ class UserService extends DAO {
     async getById(id) {
         await this.check();
         const objectId = new mongodb.ObjectId(id);
-        const user = await this.collection?.findOne({ _id: objectId });
-        return user ? { _id: user._id.toString(), name: user.name, email: user.email } : null;
+        const { _id, ...data } = await this.collection?.findOne({ _id: objectId });
+        return data ? { _id: _id.toString(), ...data } : null;
     }
 
     /**
@@ -66,10 +66,10 @@ class UserService extends DAO {
         await this.check();
         const objectId = new mongodb.ObjectId(id);
         const result = await this.collection?.findOneAndUpdate({ _id: objectId }, { $set: updates }, { returnDocument: 'after' });
-        if (!result.value)
-            return null;
-        const { _id, name, email } = result.value;
-        return { _id: _id.toString(), name, email };
+        this.logger?.log(JSON.stringify({ src: "service:update", result }));
+        if (!result) return null;
+        const { _id, ...data } = result.value || result;
+        return { _id: _id.toString(), ...data };
     }
 
     /**
